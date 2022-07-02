@@ -1,0 +1,29 @@
+#include <ESP8266WiFi.h>
+#include <ThingSpeak.h>
+
+WiFiClient client;
+
+long myChannelNumber = 1683241;
+const char myWriteAPIKey[] = "X7SAAZL6R686HKT5";
+
+void setup() {
+  // put your setup code here, to run once:
+  Serial.begin(9600);
+  WiFi.begin("b", "12345678");
+  while(WiFi.status() != WL_CONNECTED)
+  {
+    delay(200);
+    Serial.print("..");
+  }
+  Serial.println();
+  Serial.println("NodeMCU is connected!");
+  Serial.println(WiFi.localIP());
+  ThingSpeak.begin(client);
+}
+
+void loop() {
+  int val = analogRead(A0);
+  Serial.println(val);
+  ThingSpeak.writeField(myChannelNumber, 1, val, myWriteAPIKey);
+  delay(15000);
+}
